@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Faiz Akram</title>
 <meta name="description" content="Faiz Akram — Senior Staff Engineer working on applied AI, computational imaging, edge AI and scientific computing for smartphone diagnostics.">
+<script>
+  // Pick the view before first paint so the page doesn't flash the wrong content.
+  (function () {
+    var view = 'overview';
+    try {
+      var q = new URLSearchParams(location.search).get('view');
+      if (q === 'depth' || q === 'overview') view = q;
+      else if (localStorage.getItem('portfolio-view') === 'depth') view = 'depth';
+    } catch (e) {}
+    document.documentElement.setAttribute('data-view', view);
+  })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -34,25 +46,51 @@
   }
 
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; scroll-padding-top: 72px; }
   body {
     margin: 0; background: var(--bg); color: var(--ink);
     font: 400 17px/1.6 "IBM Plex Sans", system-ui, sans-serif;
   }
   a { color: var(--accent); text-underline-offset: 3px; }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
   h1, h2, h3 { font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif; font-weight: 600; line-height: 1.1; margin: 0; }
   p { margin: 0 0 1em; }
 
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
   @media (min-width: 720px) { .wrap { padding: 0 40px; } }
 
+  /* ---------- View switching ---------- */
+  html[data-view="overview"] .deep { display: none !important; }
+  html[data-view="depth"] .light-only { display: none !important; }
+  html[data-view="depth"] .deep { animation: reveal .35s ease both; }
+  @keyframes reveal { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .bar {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 60px; }
+  .bar .who { font: 600 18px/1 "IBM Plex Sans Condensed", sans-serif; color: var(--ink); text-decoration: none; white-space: nowrap; }
+  .switch { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; padding: 3px; background: var(--surface); }
+  .switch button {
+    appearance: none; border: 0; background: transparent; color: var(--muted); cursor: pointer;
+    font: 500 15px/1 "IBM Plex Sans", sans-serif; padding: 8px 14px; border-radius: 999px;
+    display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap;
+  }
+  .switch button span { font-size: 12px; font-weight: 400; opacity: .8; }
+  .switch button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  @media (max-width: 400px) { .switch button span { display: none; } .switch button { padding: 8px 12px; } }
+  html:not([data-view]) .switch, html:not([data-view]) .light-only { display: none; }
+
   /* Hero */
-  .hero { display: grid; gap: 40px; padding: 72px 0 64px; align-items: center; }
-  @media (min-width: 860px) { .hero { grid-template-columns: 1fr 300px; gap: 64px; padding: 112px 0 96px; } }
+  .hero { display: grid; gap: 40px; padding: 64px 0 56px; align-items: center; }
+  @media (min-width: 860px) { .hero { grid-template-columns: 1fr 300px; gap: 64px; padding: 96px 0 88px; } }
   .hero h1 { font-size: clamp(52px, 9vw, 104px); letter-spacing: -0.01em; }
   .hero .role { font-size: 20px; color: var(--muted); margin: 14px 0 28px; }
   .hero .pitch { font-size: 21px; line-height: 1.5; max-width: 34ch; }
+  .hero .pitch-more { max-width: 52ch; color: var(--muted); }
   .links { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 28px; font-weight: 500; }
 
   /* Bayer mosaic → reconstructed 10-track strip */
@@ -69,7 +107,7 @@
   @keyframes resolve { from { background-size: 40px 40px; } to { background-size: 6px 6px; } }
   @keyframes develop { from { opacity: 0; } to { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
-    .frame, .frame svg { animation: none; }
+    .frame, .frame svg, html[data-view="depth"] .deep { animation: none; }
   }
 
   /* Sections */
@@ -79,6 +117,7 @@
   }
   section > h2 { font-size: 26px; margin-bottom: 28px; }
   .body { max-width: 68ch; }
+  .lede { font-size: 18px; margin-bottom: 28px; }
 
   /* Career pipeline: a real sequence, so numbered */
   ol.pipeline { list-style: none; margin: 0; padding: 0; counter-reset: stage; }
@@ -96,14 +135,27 @@
   ol.pipeline p { color: var(--muted); margin: 0; }
 
   /* Selected work */
-  .work { display: grid; gap: 0; }
-  .item { display: grid; gap: 6px 28px; padding: 26px 0; border-bottom: 1px solid var(--rule); }
+  .work { display: grid; }
+  .item { display: grid; gap: 6px 28px; padding: 28px 0; border-bottom: 1px solid var(--rule); }
   .item:first-child { padding-top: 0; }
   @media (min-width: 640px) { .item { grid-template-columns: 150px 1fr; } }
   .metric { font: 600 34px/1 "IBM Plex Sans Condensed", sans-serif; color: var(--accent); }
   .metric small { display: block; font: 400 14px/1.4 "IBM Plex Sans", sans-serif; color: var(--muted); margin-top: 6px; }
   .item h3 { font-size: 20px; margin-bottom: 6px; }
   .item p { margin: 0; }
+
+  .detail { margin-top: 16px; padding-left: 16px; border-left: 2px solid var(--rule); }
+  .detail h4 { font: 600 15px/1.3 "IBM Plex Sans", sans-serif; margin: 14px 0 4px; }
+  .detail h4:first-child { margin-top: 0; }
+  .detail ul { margin: 0; padding-left: 18px; color: var(--muted); }
+  .detail li { margin-bottom: 5px; }
+  .detail p { color: var(--muted); }
+
+  .nudge { margin-top: 28px; color: var(--muted); }
+  .linkbtn {
+    appearance: none; background: none; border: 0; padding: 0; cursor: pointer;
+    font: inherit; font-weight: 500; color: var(--accent); text-decoration: underline; text-underline-offset: 3px;
+  }
 
   /* Experience */
   .job { padding-bottom: 30px; }
@@ -113,10 +165,21 @@
   .job ul { margin: 0; padding-left: 20px; }
   .job li { margin-bottom: 6px; }
 
+  /* Foundations / approach lists */
+  .facts { display: grid; gap: 22px; }
+  .facts h3 { font-size: 18px; margin-bottom: 4px; }
+  .facts p { margin: 0; color: var(--muted); }
+
   dl.tools { margin: 0; display: grid; gap: 14px; }
   @media (min-width: 640px) { dl.tools { grid-template-columns: 190px 1fr; gap: 14px 24px; } }
   dl.tools dt { font-weight: 600; }
   dl.tools dd { margin: 0; color: var(--muted); }
+
+  table.ledger { width: 100%; border-collapse: collapse; font-size: 15px; }
+  table.ledger th, table.ledger td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  table.ledger th { font-weight: 600; color: var(--muted); font-size: 14px; }
+  table.ledger td:first-child { font: 600 18px/1.3 "IBM Plex Sans Condensed", sans-serif; color: var(--accent); white-space: nowrap; }
+  .table-scroll { overflow-x: auto; }
 
   ul.plain { list-style: none; padding: 0; margin: 0; }
   ul.plain li { padding: 12px 0; border-bottom: 1px solid var(--rule); }
@@ -124,16 +187,37 @@
   ul.plain .note { display: block; font-size: 15px; color: var(--muted); }
 
   footer { border-top: 1px solid var(--rule); padding: 40px 0 64px; color: var(--muted); font-size: 15px; }
+
+  @media print {
+    .bar { display: none; }
+    html[data-view] .deep { display: revert !important; animation: none; }
+    html[data-view] .light-only { display: none !important; }
+  }
 </style>
 </head>
 <body>
-<main class="wrap">
+
+<div class="bar">
+  <div class="wrap">
+    <a class="who" href="#top">Faiz Akram</a>
+    <div class="switch" role="group" aria-label="How much detail to show">
+      <button type="button" data-set="overview" aria-pressed="true">Overview <span data-time="overview"></span></button>
+      <button type="button" data-set="depth" aria-pressed="false">In depth <span data-time="depth"></span></button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap" id="top">
 
   <header class="hero">
     <div>
       <h1>Faiz Akram</h1>
-      <p class="role">Senior Staff Engineer at Inito · Bengaluru</p>
+      <p class="role">Senior Staff Engineer at Inito, Bengaluru</p>
       <p class="pitch">I build measurement systems where optics, imaging, AI, cloud infrastructure and manufacturing all have to work before anything ships.</p>
+      <div class="deep pitch-more">
+        <p>I joined Inito as employee #2, when the technical team was a hardware designer and me. Over eleven years the work has grown from mobile imaging into quantitative diagnostics, manufacturing vision, edge AI, assay simulation, GPU-scale computational biology and, now, the architecture of a regulated multi-track diagnostic.</p>
+        <p>I'm not attached to one technique. I pick classical vision, deep learning, first-principles simulation, Monte Carlo or retrieval depending on where the real bottleneck is.</p>
+      </div>
       <nav class="links" aria-label="Contact">
         <a href="mailto:faizakram009@gmail.com">Email</a>
         <a href="https://www.linkedin.com/in/faizakram-39066147">LinkedIn</a>
@@ -163,41 +247,160 @@
   <section id="work">
     <h2>Selected work</h2>
     <div class="work body">
+
       <article class="item">
         <div class="metric">~6 yrs<small>in production without retraining</small></div>
         <div><h3>Edge AI that outlasted the hardware</h3>
-        <p>Replaced a brittle multi-scale template matcher with a quantized on-device classifier that kept working across new iPhone generations. Edge models from this work now run on 200K+ phones in the US.</p></div>
+        <p>Replaced a brittle multi-scale template matcher with a quantized on-device classifier that kept working across new iPhone generations. Edge models from this work now run on 200K+ phones in the US.</p>
+        <div class="deep detail">
+          <h4>The problem</h4>
+          <p>The original detector used multi-scale template matching. It worked on the phones it was tuned for and broke on new camera hardware, which made every new phone release a support risk.</p>
+          <h4>What I did</h4>
+          <ul>
+            <li>Trained a deep-learning classifier to replace the classical detector.</li>
+            <li>Quantized it for on-device inference and integrated it into the production iOS app.</li>
+            <li>Followed up with further edge detection and classification models, owning training, optimisation, mobile integration and production behaviour.</li>
+          </ul>
+          <h4>Outcome</h4>
+          <p>Near-100% performance with no observed failures in the months after launch, and roughly six years across newer iPhones without retraining, based on production observation.</p>
+        </div></div>
       </article>
+
       <article class="item">
         <div class="metric">~92%<small>agreement with the dedicated reader</small></div>
         <div><h3>Diagnostics from a phone photo</h3>
-        <p>A cascaded classification, detection, segmentation and regression pipeline that reads test strips from smartphone photos, testing whether computation can replace purpose-built optical hardware.</p></div>
+        <p>A cascaded classification, detection, segmentation and regression pipeline that reads test strips from smartphone photos, testing whether computation can replace purpose-built optical hardware.</p>
+        <div class="deep detail">
+          <h4>How the cascade works</h4>
+          <ul>
+            <li><strong>Classification</strong> rejects photos with poor quality, occlusion or foreign objects.</li>
+            <li><strong>Detection</strong> localises the features the measurement depends on.</li>
+            <li><strong>Segmentation</strong> extracts precise regions of interest.</li>
+            <li><strong>Regression</strong> estimates the final quantitative value.</li>
+          </ul>
+          <h4>Scope</h4>
+          <p>I owned the whole path from phone capture to backend result, not a single model: data flow, model stages, deployment and integration. In comparative validation the result agreed with the dedicated reader about 92% of the time.</p>
+        </div></div>
       </article>
+
       <article class="item">
         <div class="metric">~200 ms<small>per strip inspected</small></div>
         <div><h3>Manufacturing machine vision</h3>
-        <p>Real-time QC built from scratch: optical defect inspection, print-drift checks, LED colour binning and strip qualification, linked by traceability. Associated systems have qualified ~30M strips and 300K+ devices.</p></div>
+        <p>Real-time QC built from scratch: optical defect inspection, print-drift checks, LED colour binning and strip qualification, linked by traceability. Associated systems have qualified ~30M strips and 300K+ devices.</p>
+        <div class="deep detail">
+          <h4>What gets inspected</h4>
+          <ul>
+            <li>Optical components, imaged with high-definition machine cameras for dust, fibres, burrs and scratches, each part linked to a QR code.</li>
+            <li>Calibration charts, checked for colour drift against reference standards straight after printing so printer drift is caught before assembly.</li>
+            <li>LEDs, binned against datasheet behaviour and target CIELAB colour regions.</li>
+            <li>Strips, qualified on a conveyor with machine cameras in about 200 ms each.</li>
+          </ul>
+          <p>The point was a measurable production system, where a part's history follows it from inspection through assembly to the field, rather than a pass/fail gate.</p>
+        </div></div>
       </article>
+
       <article class="item">
         <div class="metric">N lines<small>configurable assay simulator</small></div>
         <div><h3>Lateral-flow assays in silico</h3>
-        <p>Mechanistic models of capillary flow, transport and binding kinetics for sandwich and competitive assays, so designs can be screened before wet-lab work. Paired with Monte Carlo simulation of the full multi-track product.</p></div>
+        <p>Mechanistic models of capillary flow, transport and binding kinetics for sandwich and competitive assays, so designs can be screened before wet-lab work. Paired with Monte Carlo simulation of the full multi-track product.</p>
+        <div class="deep detail">
+          <h4>What the simulator models</h4>
+          <ul>
+            <li>Capillary flow and time-to-reach along the strip.</li>
+            <li>Analyte and probe transport, and association/dissociation kinetics between antibody, analyte, conjugate and capture.</li>
+            <li>Strip dimensions and line geometry, with any number of test and control lines.</li>
+            <li>Signal accumulation over time and its mapping to a measurable readout.</li>
+          </ul>
+          <h4>Product-level Monte Carlo</h4>
+          <p>For the ten-track product I simulate the whole strip, not just a model. Assay variability is propagated through the multi-track decision logic to estimate system accuracy on virtual datasets far larger than physical testing allows, using bootstrap and correlation-aware replica models built from measured signal distributions.</p>
+        </div></div>
       </article>
+
       <article class="item">
         <div class="metric">20–30<small>GPUs orchestrated</small></div>
         <div><h3>Antibody design at GPU scale</h3>
-        <p>Protein folding, design and docking workflows on a multi-GPU orchestration layer built from scratch, producing a lead testosterone antibody candidate for an IP-oriented program. Wrapped in a Flask web platform the wider team can use.</p></div>
+        <p>Protein folding, design and docking workflows on a multi-GPU orchestration layer I built from scratch, generating ranked computational candidates for an IP-oriented testosterone antibody program.</p>
+        <div class="deep detail">
+          <h4>Workflows</h4>
+          <ul>
+            <li>Structure prediction and evaluation with AlphaFold-family tools and ImmuneBuilder.</li>
+            <li>Binder design with RFdiffusion-style generation and ProteinMPNN sequence design, including work on insulin binders.</li>
+            <li>Docking and affinity estimation with AutoDock-related tooling, OpenMM, AmberTools and MMPBSA.</li>
+            <li>Mutation and review tooling that accounts for CDR definitions, flexible docking residues, docking energies and patent-coverage rules.</li>
+          </ul>
+          <h4>Infrastructure</h4>
+          <p>An orchestration layer that distributes independent jobs across 20–30 GPUs at once and merges results, reusable for new targets. A Flask web platform puts sequence comparison, generation, folding, docking and CSV-driven batch runs in front of the wider team, with concurrency limits matched to capacity.</p>
+        </div></div>
       </article>
+
       <article class="item">
         <div class="metric">10 tracks<small>one reported result</small></div>
         <div><h3>Next-generation diagnostic platform</h3>
-        <p>Strip geometry, on-device capture engine, cloud ML on Docker and Vertex AI, multi-track consensus logic, drift and defect analytics, and verification tooling. In development for clinical studies and an intended 510(k) submission.</p></div>
+        <p>Strip geometry, on-device capture engine, cloud ML on Docker and Vertex AI, multi-track consensus logic, drift and defect analytics, and verification tooling. In development for clinical studies and an intended 510(k) submission.</p>
+        <div class="deep detail">
+          <h4>Designing the strip for the camera</h4>
+          <p>From the product-design stage: strip size, track width and spacing, background contrast, QR size and placement, and embossed features to reduce shadowing, each turned from imaging studies into explicit requirements.</p>
+          <h4>Capture and backend</h4>
+          <ul>
+            <li>A capture engine that checks geometry and image quality on live preview frames, guides the user and keeps the best analytical frame.</li>
+            <li>One camera library shared by production, data collection, model training and verification, so models never see a different acquisition path from the one they'll run on.</li>
+            <li>The frontend-to-backend contract, the image-processing pipeline, the set of models needed, and containerised Flask services on Vertex AI.</li>
+          </ul>
+          <h4>Making ten tracks agree</h4>
+          <p>Intermediate cutoffs use several replica tracks and a consensus decision rather than trusting one track. I evaluate per-track behaviour, false-positive and false-negative rates and replica tolerance.</p>
+          <h4>Manufacturing and verification</h4>
+          <ul>
+            <li>A two-stage conjugate binning workflow where bin definitions are locked as controlled files, so operators can't retune processing during classification.</li>
+            <li>Scanner-to-scanner drift analysis with comparison dashboards.</li>
+            <li>Simulated dust, bubbles and foreign objects over the analytical regions to find the smallest defect that changes the result.</li>
+            <li>A verification jig with about five degrees of freedom to test capture robustness under realistic pose changes.</li>
+          </ul>
+        </div></div>
       </article>
+
       <article class="item">
         <div class="metric">RAG<small>for customer support</small></div>
         <div><h3>Keeping institutional knowledge</h3>
-        <p>Historical resolved tickets turned into a retrieval index that drafts replies for support agents, so answers survive when people move on.</p></div>
+        <p>Historical resolved tickets turned into a retrieval index that drafts replies for support agents, so answers survive when people move on.</p>
+        <div class="deep detail">
+          <ul>
+            <li>Resolved tickets and agent replies processed into retrieval-ready knowledge units.</li>
+            <li>Embeddings stored in a vector database; new tickets retrieve the most similar past cases.</li>
+            <li>Retrieved context goes to an LLM that drafts a reply for an agent to review, cutting drafting time per ticket.</li>
+          </ul>
+        </div></div>
       </article>
+    </div>
+  </section>
+
+  <section id="foundations" class="deep">
+    <h2>Earlier foundations</h2>
+    <div class="body">
+      <p class="lede">Before the systems above, the first-generation product needed a lot of smaller problems solved, mostly from scratch.</p>
+      <div class="facts">
+        <div><h3>Near-field optics</h3><p>Prism, mirror and glass optics that let a phone camera image a target less than about a centimetre away, tuned for sharpness, focus and contrast.</p></div>
+        <div><h3>Firmware and talking through light</h3><p>Arduino/C++ firmware for backlight timing and PWM to balance imaging against battery life, plus a four-LED blink pattern that sent device data to the phone through its camera.</p></div>
+        <div><h3>Device sensing with the front camera</h3><p>A preview-frame classifier and state machine that detected when the device was attached or removed, without any extra electronics.</p></div>
+        <div><h3>A camera platform for 100+ phones</h3><p>Camera selection and control across 75+ Android models and every iPhone from about the 6 onward, processing preview frames at around 20 FPS for real-time feedback.</p></div>
+        <div><h3>Colour calibration</h3><p>An on-device calibration chart used to estimate a colour-correction matrix, normalising each phone's colour response for quantitative imaging.</p></div>
+        <div><h3>Strip identity</h3><p>An encrypted code scheme addressing about 2 billion strips without collisions, printed as Aztec codes and decoded from phone images to prevent reuse and support traceability.</p></div>
+        <div><h3>Hormone time series</h3><p>Algorithms that find baselines, rises and surges in each user's own history rather than fixed thresholds, later explored with attention-based 1D models.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="approach" class="deep">
+    <h2>How I choose tools</h2>
+    <div class="body">
+      <p class="lede">Each shift in technique came from a specific bottleneck, not a trend.</p>
+      <div class="facts">
+        <div><h3>Deep learning, when generalisation broke</h3><p>Template matching couldn't keep up with new phone cameras, so a learned model replaced it.</p></div>
+        <div><h3>Computation instead of hardware</h3><p>The photo-only pipeline tested whether AI could absorb what a dedicated optical reader did.</p></div>
+        <div><h3>Simulation, when wet-lab cycles were the cost</h3><p>Every assay iteration takes reagents, fabrication and imaging, so the simulator narrows the search first.</p></div>
+        <div><h3>Monte Carlo, when averages hid the risk</h3><p>Product-level uncertainty only shows up when variability is pushed through the full decision logic.</p></div>
+        <div><h3>GPU orchestration, when one machine wasn't enough</h3><p>Modern protein design needed many GPUs running in parallel.</p></div>
+        <div><h3>Retrieval, when knowledge walked out the door</h3><p>Support answers lived in people's heads, so past tickets became searchable context.</p></div>
+      </div>
     </div>
   </section>
 
@@ -206,35 +409,63 @@
     <div class="body">
       <div class="job">
         <h3>Inito</h3>
-        <p class="meta">Employee #2 → Senior Staff Engineer · Sep 2015 – present · Bengaluru</p>
+        <p class="meta">Employee #2 to Senior Staff Engineer, Sep 2015 – present, Bengaluru</p>
         <ul>
           <li>Joined when the technical team was one hardware designer and me; grew with the company through first product, manufacturing scale-up and US launch.</li>
           <li>Owned imaging, optics interaction, firmware, quantification, strip identity, manufacturing vision, edge AI, simulation and computational biology at different stages.</li>
           <li>Now own system-level technical decisions for a next-generation regulated diagnostic product.</li>
+          <li class="deep">Built across iOS (Swift, Objective-C, C++), Android (Java, NDK), MATLAB prototypes, Python and Ruby backends, and production tooling.</li>
         </ul>
       </div>
       <div class="job">
         <h3>Samsung Research Institute Bangalore</h3>
-        <p class="meta">Software Engineer, Camera &amp; Imaging R&amp;D · Jun 2014 – Aug 2015</p>
+        <p class="meta">Software Engineer, Camera &amp; Imaging R&amp;D, Jun 2014 – Aug 2015</p>
         <ul>
           <li>Raw sensor pipelines, Bayer-pattern reconstruction and rolling-shutter characterisation.</li>
           <li>Classical computer vision and Caffe-based neural networks for machine-vision applications.</li>
+          <li class="deep">Bayer reconstruction work focused on colour reproduction, fidelity and artefact reduction, and on how those choices affect downstream detection.</li>
+          <li class="deep">Characterised and mitigated rolling-shutter distortion caused by motion and line-by-line readout timing.</li>
+          <li class="deep">Optimised for latency, efficiency and robustness to sensor and lighting variation, not just offline accuracy.</li>
         </ul>
       </div>
       <div class="job">
         <h3>Cisco Systems India</h3>
-        <p class="meta">Network Consultant Engineer · Jul 2013 – Apr 2014</p>
+        <p class="meta">Network Consultant Engineer, Jul 2013 – Apr 2014</p>
         <ul><li>Python, C and C++ tooling to configure routers and switches remotely during network deployments.</li></ul>
       </div>
       <div class="job">
         <h3>Qualitas Technologies</h3>
-        <p class="meta">Intern · May – Jul 2012</p>
-        <ul><li>Image-based autofocus algorithm and motor-control circuit for motorised CCTV zoom lenses.</li></ul>
+        <p class="meta">Intern, May – Jul 2012</p>
+        <ul>
+          <li>Image-based autofocus algorithm and motor-control circuit for motorised CCTV zoom lenses.</li>
+          <li class="deep">Qualigrab: a tool for selecting multiple regions of interest in an image and saving each to its own folder.</li>
+        </ul>
       </div>
       <div class="job">
         <h3>IIT Roorkee</h3>
-        <p class="meta">B.Tech, Electrical Engineering · 2009 – 2013</p>
+        <p class="meta">B.Tech, Electrical Engineering, 2009 – 2013</p>
       </div>
+    </div>
+  </section>
+
+  <section id="numbers" class="deep">
+    <h2>By the numbers</h2>
+    <div class="body table-scroll">
+      <table class="ledger">
+        <thead><tr><th scope="col">Figure</th><th scope="col">What it measures</th></tr></thead>
+        <tbody>
+          <tr><td>~30M</td><td>Strips qualified by production systems associated with my QC work</td></tr>
+          <tr><td>300K+</td><td>Devices qualified</td></tr>
+          <tr><td>200K+</td><td>US smartphones running edge models from this platform</td></tr>
+          <tr><td>100+</td><td>Phone models supported by the camera platform (75+ Android, iPhone 6 onward)</td></tr>
+          <tr><td>~6 yrs</td><td>Production life of an edge model across new iPhones without retraining</td></tr>
+          <tr><td>~92%</td><td>Agreement of the photo-only pipeline with the dedicated reader in comparative validation</td></tr>
+          <tr><td>~200 ms</td><td>Machine-vision inspection time per strip</td></tr>
+          <tr><td>~20 FPS</td><td>Real-time preview processing on phones</td></tr>
+          <tr><td>~2B</td><td>Unique strip identities addressable by the code scheme</td></tr>
+          <tr><td>20–30</td><td>GPUs running concurrently for protein design</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -243,11 +474,11 @@
     <div class="body">
       <ul class="plain">
         <li>Development of Smartphone-Based Lateral Flow Device for the Quantification of LH and E3G Hormones
-          <span class="note">IEEE Sensors Journal, 2020 · co-author</span></li>
+          <span class="note">IEEE Sensors Journal, 2020, co-author</span></li>
         <li><a href="https://patents.google.com/patent/WO2025255262A1/en">WO2025255262A1</a>
-          <span class="note">PCT patent application · inventor</span></li>
+          <span class="note">PCT patent application, inventor</span></li>
         <li><a href="https://patents.google.com/patent/WO2026028178A1/en">WO2026028178A1</a>
-          <span class="note">PCT patent application · inventor</span></li>
+          <span class="note">PCT patent application, inventor</span></li>
         <li>Company and product recognition
           <span class="note">Inito was part of Y Combinator W19. The Gen-1 device I worked on received a CII Good Design Award in 2026.</span></li>
       </ul>
@@ -264,8 +495,18 @@
       <dt>Simulation</dt><dd>MATLAB, kinetics and transport modelling, Monte Carlo and bootstrap methods</dd>
       <dt>Computational biology</dt><dd>AlphaFold family, ImmuneBuilder, ProteinMPNN, RFdiffusion-style design, AutoDock tooling, OpenMM, AmberTools</dd>
       <dt>Generative AI</dt><dd>Embeddings, vector databases, retrieval-augmented generation</dd>
+      <dt class="deep">Firmware</dt><dd class="deep">Arduino/C++, PWM illumination control, LED optical signalling</dd>
     </dl>
   </section>
+
+  <section id="side" class="deep">
+    <h2>On the side</h2>
+    <div class="body">
+      <p>Pose-estimation prototypes for seated exercise breaks, moving from PoseNet to BlazePose/MediaPipe pipelines: webcam overlays, exercise state machines, repetition feedback and geometry-based metrics like shoulder angles. One spin-off was Shoulder-Pong, a game you play by lifting your shoulders.</p>
+    </div>
+  </section>
+
+  <p class="nudge light-only">That's the short version. <button type="button" class="linkbtn" data-set="depth">Read the in-depth version</button> for how each project works, earlier foundations and the full numbers.</p>
 
 </main>
 <footer>
@@ -297,6 +538,50 @@
       el('rect', { x: x, y: 120, width: 11, height: 4, fill: 'var(--line)', opacity: strengths[i] });
       el('rect', { x: x, y: 160, width: 11, height: 4, fill: 'var(--line)', opacity: 0.45 });
     }
+  })();
+
+  // Overview / In depth switch.
+  (function () {
+    var root = document.documentElement;
+    var main = document.querySelector('main');
+
+    function words(node, includeDeep) {
+      var clone = node.cloneNode(true);
+      clone.querySelectorAll(includeDeep ? '.light-only, script' : '.deep, script').forEach(function (n) { n.remove(); });
+      return (clone.textContent.match(/\S+/g) || []).length;
+    }
+    var mins = {
+      overview: Math.max(1, Math.round(words(main, false) / 230)),
+      depth: Math.max(1, Math.round(words(main, true) / 230))
+    };
+    document.querySelectorAll('[data-time]').forEach(function (s) {
+      s.textContent = mins[s.getAttribute('data-time')] + ' min';
+    });
+
+    function apply(view, opts) {
+      root.setAttribute('data-view', view);
+      document.querySelectorAll('.switch button').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.getAttribute('data-set') === view));
+      });
+      try { localStorage.setItem('portfolio-view', view); } catch (e) {}
+      try {
+        var url = new URL(location.href);
+        if (view === 'depth') url.searchParams.set('view', 'depth'); else url.searchParams.delete('view');
+        history.replaceState(null, '', url);
+      } catch (e) {}
+      if (opts && opts.scrollTo) {
+        var target = document.getElementById(opts.scrollTo);
+        if (target) requestAnimationFrame(function () { target.scrollIntoView({ behavior: 'auto' }); });
+      }
+    }
+
+    document.querySelectorAll('[data-set]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var fromNudge = b.classList.contains('linkbtn');
+        apply(b.getAttribute('data-set'), fromNudge ? { scrollTo: 'work' } : null);
+      });
+    });
+    apply(root.getAttribute('data-view') || 'overview');
   })();
 </script>
 </body>
