@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Faiz Akram</title>
+<meta name="description" content="Faiz Akram — Senior Staff Engineer working on applied AI, computational imaging, edge AI and scientific computing for smartphone diagnostics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #E8ECEF;
+    --surface: #F5F7F8;
+    --ink: #17212B;
+    --muted: #55626E;
+    --rule: #C5CDD4;
+    --accent: #2D5C9E;
+    --r: #B8443C;
+    --g: #3F8A5A;
+    --b: #2D5C9E;
+    --strip: #FBFBF9;
+    --line: #6E2F57;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121A21; --surface: #19232C; --ink: #DCE3E8; --muted: #93A1AD;
+      --rule: #2C3A46; --accent: #7FA8E0; --strip: #E9ECEA;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121A21; --surface: #19232C; --ink: #DCE3E8; --muted: #93A1AD;
+    --rule: #2C3A46; --accent: #7FA8E0; --strip: #E9ECEA;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 400 17px/1.6 "IBM Plex Sans", system-ui, sans-serif;
+  }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  h1, h2, h3 { font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif; font-weight: 600; line-height: 1.1; margin: 0; }
+  p { margin: 0 0 1em; }
+
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 40px; } }
+
+  /* Hero */
+  .hero { display: grid; gap: 40px; padding: 72px 0 64px; align-items: center; }
+  @media (min-width: 860px) { .hero { grid-template-columns: 1fr 300px; gap: 64px; padding: 112px 0 96px; } }
+  .hero h1 { font-size: clamp(52px, 9vw, 104px); letter-spacing: -0.01em; }
+  .hero .role { font-size: 20px; color: var(--muted); margin: 14px 0 28px; }
+  .hero .pitch { font-size: 21px; line-height: 1.5; max-width: 34ch; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 28px; font-weight: 500; }
+
+  /* Bayer mosaic → reconstructed 10-track strip */
+  figure.sensor { margin: 0; max-width: 260px; }
+  @media (min-width: 860px) { figure.sensor { max-width: none; } }
+  .frame {
+    position: relative; aspect-ratio: 5 / 6; border-radius: 6px; overflow: hidden;
+    background-image: conic-gradient(var(--g) 0 25%, var(--b) 0 50%, var(--g) 0 75%, var(--r) 0);
+    background-size: 8px 8px;
+    animation: resolve 2.4s cubic-bezier(.6,0,.2,1) .3s both;
+  }
+  .frame svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: develop 1.4s ease 2.1s both; }
+  figure.sensor figcaption { font-size: 14px; color: var(--muted); margin-top: 12px; }
+  @keyframes resolve { from { background-size: 40px 40px; } to { background-size: 6px 6px; } }
+  @keyframes develop { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .frame, .frame svg { animation: none; }
+  }
+
+  /* Sections */
+  section { border-top: 1px solid var(--rule); padding: 56px 0; }
+  @media (min-width: 860px) {
+    section { display: grid; grid-template-columns: 220px 1fr; gap: 48px; padding: 72px 0; }
+  }
+  section > h2 { font-size: 26px; margin-bottom: 28px; }
+  .body { max-width: 68ch; }
+
+  /* Career pipeline: a real sequence, so numbered */
+  ol.pipeline { list-style: none; margin: 0; padding: 0; counter-reset: stage; }
+  ol.pipeline li { counter-increment: stage; position: relative; padding: 0 0 26px 52px; }
+  ol.pipeline li::before {
+    content: counter(stage); position: absolute; left: 0; top: 0;
+    width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--accent);
+    color: var(--accent); font: 600 15px/29px "IBM Plex Sans Condensed", sans-serif; text-align: center;
+  }
+  ol.pipeline li::after {
+    content: ""; position: absolute; left: 16px; top: 36px; bottom: 4px; width: 1.5px; background: var(--rule);
+  }
+  ol.pipeline li:last-child::after { display: none; }
+  ol.pipeline h3 { font-size: 19px; margin-bottom: 4px; }
+  ol.pipeline p { color: var(--muted); margin: 0; }
+
+  /* Selected work */
+  .work { display: grid; gap: 0; }
+  .item { display: grid; gap: 6px 28px; padding: 26px 0; border-bottom: 1px solid var(--rule); }
+  .item:first-child { padding-top: 0; }
+  @media (min-width: 640px) { .item { grid-template-columns: 150px 1fr; } }
+  .metric { font: 600 34px/1 "IBM Plex Sans Condensed", sans-serif; color: var(--accent); }
+  .metric small { display: block; font: 400 14px/1.4 "IBM Plex Sans", sans-serif; color: var(--muted); margin-top: 6px; }
+  .item h3 { font-size: 20px; margin-bottom: 6px; }
+  .item p { margin: 0; }
+
+  /* Experience */
+  .job { padding-bottom: 30px; }
+  .job:last-child { padding-bottom: 0; }
+  .job h3 { font-size: 21px; }
+  .job .meta { color: var(--muted); margin: 4px 0 10px; font-size: 15px; }
+  .job ul { margin: 0; padding-left: 20px; }
+  .job li { margin-bottom: 6px; }
+
+  dl.tools { margin: 0; display: grid; gap: 14px; }
+  @media (min-width: 640px) { dl.tools { grid-template-columns: 190px 1fr; gap: 14px 24px; } }
+  dl.tools dt { font-weight: 600; }
+  dl.tools dd { margin: 0; color: var(--muted); }
+
+  ul.plain { list-style: none; padding: 0; margin: 0; }
+  ul.plain li { padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  ul.plain li:first-child { padding-top: 0; }
+  ul.plain .note { display: block; font-size: 15px; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--rule); padding: 40px 0 64px; color: var(--muted); font-size: 15px; }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header class="hero">
+    <div>
+      <h1>Faiz Akram</h1>
+      <p class="role">Senior Staff Engineer at Inito · Bengaluru</p>
+      <p class="pitch">I build measurement systems where optics, imaging, AI, cloud infrastructure and manufacturing all have to work before anything ships.</p>
+      <nav class="links" aria-label="Contact">
+        <a href="mailto:faizakram009@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/faizakram-39066147">LinkedIn</a>
+        <a href="https://github.com/faizakram1931">GitHub</a>
+      </nav>
+    </div>
+    <figure class="sensor" aria-hidden="true">
+      <div class="frame"><svg id="strip" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid slice"></svg></div>
+      <figcaption>A raw Bayer mosaic, reconstructed into a ten-track test strip. Most of my work lives somewhere between those two images.</figcaption>
+    </figure>
+  </header>
+
+  <section id="arc">
+    <h2>From sensor to system</h2>
+    <div class="body">
+      <ol class="pipeline">
+        <li><h3>Camera physics</h3><p>Raw sensor data, Bayer reconstruction and rolling-shutter behaviour at Samsung R&amp;D.</p></li>
+        <li><h3>Smartphone measurement</h3><p>Joined Inito as employee #2 and turned phone cameras across 100+ models into quantitative hormone readers.</p></li>
+        <li><h3>Production at scale</h3><p>Manufacturing machine vision, calibration and traceability for millions of strips.</p></li>
+        <li><h3>Applied AI</h3><p>Edge models on phones, then a smartphone-only pipeline that replaces dedicated reader hardware.</p></li>
+        <li><h3>Scientific computing</h3><p>Assay simulation, Monte Carlo product modelling and GPU-scale antibody design.</p></li>
+        <li><h3>System architecture</h3><p>Today: the technical architecture of a ten-track diagnostic being developed toward an FDA 510(k) submission.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="work">
+    <h2>Selected work</h2>
+    <div class="work body">
+      <article class="item">
+        <div class="metric">~6 yrs<small>in production without retraining</small></div>
+        <div><h3>Edge AI that outlasted the hardware</h3>
+        <p>Replaced a brittle multi-scale template matcher with a quantized on-device classifier that kept working across new iPhone generations. Edge models from this work now run on 200K+ phones in the US.</p></div>
+      </article>
+      <article class="item">
+        <div class="metric">~92%<small>agreement with the dedicated reader</small></div>
+        <div><h3>Diagnostics from a phone photo</h3>
+        <p>A cascaded classification, detection, segmentation and regression pipeline that reads test strips from smartphone photos, testing whether computation can replace purpose-built optical hardware.</p></div>
+      </article>
+      <article class="item">
+        <div class="metric">~200 ms<small>per strip inspected</small></div>
+        <div><h3>Manufacturing machine vision</h3>
+        <p>Real-time QC built from scratch: optical defect inspection, print-drift checks, LED colour binning and strip qualification, linked by traceability. Associated systems have qualified ~30M strips and 300K+ devices.</p></div>
+      </article>
+      <article class="item">
+        <div class="metric">N lines<small>configurable assay simulator</small></div>
+        <div><h3>Lateral-flow assays in silico</h3>
+        <p>Mechanistic models of capillary flow, transport and binding kinetics for sandwich and competitive assays, so designs can be screened before wet-lab work. Paired with Monte Carlo simulation of the full multi-track product.</p></div>
+      </article>
+      <article class="item">
+        <div class="metric">20–30<small>GPUs orchestrated</small></div>
+        <div><h3>Antibody design at GPU scale</h3>
+        <p>Protein folding, design and docking workflows on a multi-GPU orchestration layer built from scratch, producing a lead testosterone antibody candidate for an IP-oriented program. Wrapped in a Flask web platform the wider team can use.</p></div>
+      </article>
+      <article class="item">
+        <div class="metric">10 tracks<small>one reported result</small></div>
+        <div><h3>Next-generation diagnostic platform</h3>
+        <p>Strip geometry, on-device capture engine, cloud ML on Docker and Vertex AI, multi-track consensus logic, drift and defect analytics, and verification tooling. In development for clinical studies and an intended 510(k) submission.</p></div>
+      </article>
+      <article class="item">
+        <div class="metric">RAG<small>for customer support</small></div>
+        <div><h3>Keeping institutional knowledge</h3>
+        <p>Historical resolved tickets turned into a retrieval index that drafts replies for support agents, so answers survive when people move on.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="experience">
+    <h2>Experience</h2>
+    <div class="body">
+      <div class="job">
+        <h3>Inito</h3>
+        <p class="meta">Employee #2 → Senior Staff Engineer · Sep 2015 – present · Bengaluru</p>
+        <ul>
+          <li>Joined when the technical team was one hardware designer and me; grew with the company through first product, manufacturing scale-up and US launch.</li>
+          <li>Owned imaging, optics interaction, firmware, quantification, strip identity, manufacturing vision, edge AI, simulation and computational biology at different stages.</li>
+          <li>Now own system-level technical decisions for a next-generation regulated diagnostic product.</li>
+        </ul>
+      </div>
+      <div class="job">
+        <h3>Samsung Research Institute Bangalore</h3>
+        <p class="meta">Software Engineer, Camera &amp; Imaging R&amp;D · Jun 2014 – Aug 2015</p>
+        <ul>
+          <li>Raw sensor pipelines, Bayer-pattern reconstruction and rolling-shutter characterisation.</li>
+          <li>Classical computer vision and Caffe-based neural networks for machine-vision applications.</li>
+        </ul>
+      </div>
+      <div class="job">
+        <h3>Cisco Systems India</h3>
+        <p class="meta">Network Consultant Engineer · Jul 2013 – Apr 2014</p>
+        <ul><li>Python, C and C++ tooling to configure routers and switches remotely during network deployments.</li></ul>
+      </div>
+      <div class="job">
+        <h3>Qualitas Technologies</h3>
+        <p class="meta">Intern · May – Jul 2012</p>
+        <ul><li>Image-based autofocus algorithm and motor-control circuit for motorised CCTV zoom lenses.</li></ul>
+      </div>
+      <div class="job">
+        <h3>IIT Roorkee</h3>
+        <p class="meta">B.Tech, Electrical Engineering · 2009 – 2013</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="publications">
+    <h2>Publications &amp; IP</h2>
+    <div class="body">
+      <ul class="plain">
+        <li>Development of Smartphone-Based Lateral Flow Device for the Quantification of LH and E3G Hormones
+          <span class="note">IEEE Sensors Journal, 2020 · co-author</span></li>
+        <li><a href="https://patents.google.com/patent/WO2025255262A1/en">WO2025255262A1</a>
+          <span class="note">PCT patent application · inventor</span></li>
+        <li><a href="https://patents.google.com/patent/WO2026028178A1/en">WO2026028178A1</a>
+          <span class="note">PCT patent application · inventor</span></li>
+        <li>Company and product recognition
+          <span class="note">Inito was part of Y Combinator W19. The Gen-1 device I worked on received a CII Good Design Award in 2026.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="tools">
+    <h2>Tools</h2>
+    <dl class="tools body">
+      <dt>Imaging &amp; vision</dt><dd>Raw/Bayer pipelines, OpenCV, colour calibration, detection, segmentation, pose estimation</dd>
+      <dt>Machine learning</dt><dd>PyTorch, TensorFlow, Caffe, YOLO family, attention models for time series, quantization, Core ML, ONNX</dd>
+      <dt>Mobile</dt><dd>Swift, Objective-C, C++, Java, Android NDK</dd>
+      <dt>Backend &amp; cloud</dt><dd>Python, Flask, Ruby, Docker, Google Vertex AI, multi-GPU orchestration</dd>
+      <dt>Simulation</dt><dd>MATLAB, kinetics and transport modelling, Monte Carlo and bootstrap methods</dd>
+      <dt>Computational biology</dt><dd>AlphaFold family, ImmuneBuilder, ProteinMPNN, RFdiffusion-style design, AutoDock tooling, OpenMM, AmberTools</dd>
+      <dt>Generative AI</dt><dd>Embeddings, vector databases, retrieval-augmented generation</dd>
+    </dl>
+  </section>
+
+</main>
+<footer>
+  <div class="wrap">
+    Interested in Staff and Principal applied AI roles where models have to survive contact with the physical world.
+    Reach me at <a href="mailto:faizakram009@gmail.com">faizakram009@gmail.com</a>.
+  </div>
+</footer>
+
+<script>
+  // Draw the reconstructed ten-track strip shown over the Bayer mosaic.
+  (function () {
+    var svg = document.getElementById('strip');
+    if (!svg) return;
+    var ns = 'http://www.w3.org/2000/svg';
+    function el(tag, attrs) {
+      var e = document.createElementNS(ns, tag);
+      for (var k in attrs) e.setAttribute(k, attrs[k]);
+      svg.appendChild(e);
+      return e;
+    }
+    el('rect', { x: 0, y: 0, width: 200, height: 240, fill: '#3B4A57' });
+    el('rect', { x: 12, y: 20, width: 176, height: 200, rx: 6, fill: 'var(--strip)' });
+    var strengths = [0.95, 0.85, 0.7, 0.55, 0.42, 0.3, 0.2, 0.12, 0.06, 0.02];
+    for (var i = 0; i < 10; i++) {
+      var x = 20 + i * 16.4;
+      el('rect', { x: x, y: 34, width: 11, height: 172, rx: 2, fill: '#FFFFFF', stroke: '#D6D9D6', 'stroke-width': 0.6 });
+      el('rect', { x: x, y: 70, width: 11, height: 4, fill: 'var(--line)', opacity: 0.85 });
+      el('rect', { x: x, y: 120, width: 11, height: 4, fill: 'var(--line)', opacity: strengths[i] });
+      el('rect', { x: x, y: 160, width: 11, height: 4, fill: 'var(--line)', opacity: 0.45 });
+    }
+  })();
+</script>
+</body>
+</html>
