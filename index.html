@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Faiz Akram</title>
-<meta name="description" content="Faiz Akram: Senior Staff Engineer who has built two smartphone diagnostic products end to end, from hardware, firmware and software to quantification, assay science and manufacturing.">
+<meta name="description" content="Faiz Akram: Senior Staff Engineer who has built two smartphone diagnostic products end to end, including a device that generated $70M in revenue from 200K users.">
 <script>
   (function () {
     var view = 'overview';
@@ -94,6 +94,11 @@
   .kpis div { background: var(--surface); padding: 20px 22px; }
   .kpis b { display: block; font: 600 clamp(30px, 4.4vw, 40px)/1 "IBM Plex Sans Condensed", sans-serif; color: var(--accent); }
   .kpis span { display: block; margin-top: 8px; font-size: 15px; color: var(--muted); line-height: 1.35; }
+  .kpis .feature { grid-column: span 2; }
+  .kpis .feature b { font-size: clamp(44px, 7vw, 64px); }
+  .kpis .feature span { font-size: 16px; }
+  .kpis .highlight { background: var(--accent); }
+  .kpis .highlight b, .kpis .highlight span { color: var(--bg); }
 
   /* Sections */
   section { border-top: 1px solid var(--rule); padding: 56px 0; }
@@ -229,7 +234,7 @@
     <div>
       <h1>Faiz Akram</h1>
       <p class="role">Senior Staff Engineer at Inito, Bengaluru</p>
-      <p class="pitch">I build diagnostic products end to end: the hardware, the phone software, the quantification, the assay science and the factory line. <strong>I've done it twice, from scratch.</strong></p>
+      <p class="pitch">I build diagnostic products end to end: the hardware, the phone software, the quantification, the assay science and the factory line. <strong>I've done it twice, from scratch. The first has generated $70M in revenue from 200K users.</strong></p>
       <div class="deep pitch-more">
         <p>I joined Inito as employee #2, when the technical team was one hardware designer and me. The first product, Inito's fertility monitor, went from a blank page to ~30M strips and 300K+ devices sold. The second, a phone-only diagnostic with a new strip and capture platform, is now in clinical trials ahead of an FDA 510(k) submission.</p>
         <p>I'm not attached to one technique. I pick optics, classical vision, deep learning, first-principles simulation, Monte Carlo or retrieval depending on where the real bottleneck is.</p>
@@ -247,6 +252,8 @@
   </header>
 
   <div class="kpis" role="list" aria-label="Headline numbers">
+    <div role="listitem" class="feature highlight"><b>$70M</b><span>revenue from the device I built, sold in the US</span></div>
+    <div role="listitem" class="feature"><b>200K</b><span>users in the US</span></div>
     <div role="listitem"><b>2</b><span>diagnostic products built from scratch</span></div>
     <div role="listitem"><b>~30M</b><span>test strips sold</span></div>
     <div role="listitem"><b>300K+</b><span>devices sold</span></div>
@@ -267,10 +274,10 @@
       </div>
 
       <div class="pstats">
+        <div><b>$70M</b><span>revenue</span></div>
+        <div><b>200K</b><span>users</span></div>
         <div><b>~30M</b><span>strips sold</span></div>
         <div><b>300K+</b><span>devices sold</span></div>
-        <div><b>100+</b><span>phone models supported</span></div>
-        <div><b>2016</b><span>CII Good Design Award</span></div>
       </div>
 
       <p class="layers-title">What I built, layer by layer</p>
@@ -526,7 +533,7 @@
         <h3>Inito</h3>
         <p class="meta">Employee #2 to Senior Staff Engineer, Sep 2015 – present, Bengaluru</p>
         <ul>
-          <li>Built Inito's fertility monitor from scratch across hardware, firmware, software, quantification and manufacturing; ~30M strips and 300K+ devices sold.</li>
+          <li>Built Inito's fertility monitor from scratch across hardware, firmware, software, quantification and manufacturing, generating <strong>$70M in revenue from 200K users</strong>, with ~30M strips and 300K+ devices sold.</li>
           <li>Built the next-generation phone-only diagnostic from scratch: strip, capture app, cloud ML and manufacturing pipeline, now in clinical trials toward an FDA 510(k).</li>
           <li>Own system-level technical decisions for the regulated product.</li>
           <li class="deep">Worked across iOS (Swift, Objective-C, C++), Android (Java, NDK), MATLAB, Python and Ruby backends, and production tooling.</li>
@@ -564,6 +571,8 @@
       <table class="ledger">
         <thead><tr><th scope="col">Figure</th><th scope="col">What it measures</th></tr></thead>
         <tbody>
+          <tr><td>$70M</td><td>Revenue generated (Product 1, US market)</td></tr>
+          <tr><td>200K</td><td>Users (Product 1)</td></tr>
           <tr><td>~30M</td><td>Test strips sold (Product 1)</td></tr>
           <tr><td>300K+</td><td>Devices sold (Product 1)</td></tr>
           <tr><td>200K+</td><td>US smartphones running edge models from this platform</td></tr>
